@@ -16,10 +16,12 @@ const LiveMap = (() => {
   });
 
   function init(elementId, options = {}) {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     _map = L.map(elementId, {
       zoomControl: true,
       attributionControl: true,
-      fadeAnimation: true,
+      fadeAnimation: !reducedMotion,
+      zoomAnimation: !reducedMotion,
       ...options,
     }).setView([0, 0], 2);
 
@@ -120,10 +122,12 @@ const LiveMap = (() => {
     _animFrames.set(id, requestAnimationFrame(animate));
   }
 
-  function addRemoteMarker(id, lat, lng) {
+  function addRemoteMarker(id, lat, lng, timestamp) {
     if (!_map) return;
     if (_remoteMarkers.has(id)) return;
-    const marker = L.marker([lat, lng], { icon: defaultIcon }).addTo(_map);
+    const marker = L.marker([lat, lng], { icon: defaultIcon })
+      .bindPopup(_popupContent(id, lat, lng, timestamp))
+      .addTo(_map);
     _remoteMarkers.set(id, { marker, lat, lng });
   }
 
