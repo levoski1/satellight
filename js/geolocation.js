@@ -28,7 +28,7 @@ const Geolocation = (() => {
   async function checkPermission() {
     if (!('geolocation' in navigator)) {
       _state = STATE.UNAVAILABLE;
-      _emit('change', _state);
+      _emit('change', { state: _state, noApi: true });
       return _state;
     }
 
@@ -65,7 +65,7 @@ const Geolocation = (() => {
 
     if (!('geolocation' in navigator)) {
       _state = STATE.UNAVAILABLE;
-      _emit('change', _state);
+      _emit('change', { state: _state, noApi: true });
       return () => stop();
     }
 

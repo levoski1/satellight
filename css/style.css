@@ -13,6 +13,24 @@ html, body {
   color: #e0e0e0;
 }
 
+/* ===== Skip Link ===== */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 8px;
+  z-index: 10000;
+  background: #e94560;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 /* ===== App Grid Layout ===== */
 #app {
   display: grid;
@@ -296,6 +314,27 @@ html, body {
   }
 }
 
+/* ===== Reduced Motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: none;
+  }
+
+  @keyframes fadeSlideUp {
+    from { animation-duration: 0.01ms; }
+    to { animation-duration: 0.01ms; }
+  }
+
+  .overlay-card {
+    animation-duration: 0.01ms;
+  }
+
+  .leaflet-fade-anim .leaflet-tile,
+  .leaflet-fade-anim .leaflet-popup {
+    transition: none !important;
+  }
+}
+
 @media (max-width: 400px) {
   #app {
     grid-template-rows: 36px 1fr 32px;
@@ -307,5 +346,57 @@ html, body {
 
   .coord-divider {
     display: none;
+  }
+}
+
+/* ===== High-Contrast Mode (Windows Forced Colors) ===== */
+@media (forced-colors: active) {
+  #topbar,
+  #coords-bar {
+    border-color: ButtonText;
+    background: Canvas;
+  }
+
+  .overlay-card {
+    border-color: CanvasText;
+    background: Canvas;
+  }
+
+  .overlay-card h2,
+  .overlay-card p,
+  .coord-label,
+  .coord-value {
+    color: CanvasText;
+  }
+
+  .indicator {
+    forced-color-adjust: none;
+    color: CanvasText;
+  }
+
+  .pulse {
+    forced-color-adjust: none;
+    outline: 2px solid Highlight;
+  }
+}
+
+/* ===== Increased Contrast (prefers-contrast: more) ===== */
+@media (prefers-contrast: more) {
+  #topbar,
+  #coords-bar {
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .coord-label,
+  .coord-divider {
+    color: #fff;
+  }
+
+  .overlay-card {
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .overlay-card p {
+    color: #fff;
   }
 }

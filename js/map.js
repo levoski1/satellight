@@ -61,16 +61,27 @@ const LiveMap = (() => {
     }
   }
 
-  function interpolateTo(id, targetLat, targetLng) {
+  function _popupContent(id, lat, lng, ts) {
+    const time = ts ? new Date(ts).toLocaleTimeString() : '—';
+    return `<div class="remote-popup"><strong>${id}</strong><br>` +
+      `${lat.toFixed(5)}, ${lng.toFixed(5)}<br>` +
+      `<span class="remote-popup-time">${time}</span></div>`;
+  }
+
+  function interpolateTo(id, targetLat, targetLng, timestamp) {
     if (!_map) return;
 
     const existing = _remoteMarkers.get(id);
 
     if (!existing) {
-      const marker = L.marker([targetLat, targetLng], { icon: defaultIcon }).addTo(_map);
+      const marker = L.marker([targetLat, targetLng], { icon: defaultIcon })
+        .bindPopup(_popupContent(id, targetLat, targetLng, timestamp))
+        .addTo(_map);
       _remoteMarkers.set(id, { marker, lat: targetLat, lng: targetLng });
       return;
     }
+
+    existing.marker.setPopupContent(_popupContent(id, targetLat, targetLng, timestamp));
 
     // Cancel any in-flight animation for this marker
     if (_animFrames.has(id)) {
